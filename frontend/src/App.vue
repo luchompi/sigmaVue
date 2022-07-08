@@ -20,6 +20,28 @@ export default{
     }else{
       axios.defaults.headers.common['Authorization'] = ''
     }
+  },
+  mounted(){
+    setInterval(()=>{
+      this.getAcces()
+    },59000)
+  },
+  methods:{
+    getAcces(e){
+      const accessData={
+        refresh: this.$store.state.refresh,
+      }
+      axios.post('/api/v1/jwt/refresh/',accessData)
+          .then(response=>{
+            const access = response.data.access
+            this.$store.commit('setAccess',access)
+            axios.defaults.headers.common['Authorization']='JWT '+access
+            localStorage.setItem('access',access)
+          })
+          .catch(error=>{
+            console.log(error)
+          })
+    }
   }
 
 
